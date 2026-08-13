@@ -267,7 +267,12 @@ fun PreviewScreen(
                             horizontalArrangement = Arrangement.Center,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            words.forEachIndexed { idx, sub ->
+                            // Show only 5 words max (active word + 2 before + 2 after)
+                            val startIdx = maxOf(0, activeWordIndex - 2)
+                            val endIdx = minOf(words.size - 1, activeWordIndex + 2)
+
+                            for (idx in startIdx..endIdx) {
+                                val sub = words[idx]
                                 val isWordHighlighted = idx == activeWordIndex
                                 Text(
                                     text = "${sub.text} ",
