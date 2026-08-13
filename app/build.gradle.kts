@@ -33,12 +33,17 @@ android {
     }
     create("debugConfig") {
       val customDebugKs = file("${rootDir}/debug.keystore")
-      if (customDebugKs.exists()) {
-        storeFile = customDebugKs
-        storePassword = "android"
-        keyAlias = "androiddebugkey"
-        keyPassword = "android"
+      val defaultDebugKs = file("${System.getenv("HOME")}/.android/debug.keystore")
+      val debugKeystore = when {
+        customDebugKs.exists() -> customDebugKs
+        defaultDebugKs.exists() -> defaultDebugKs
+        else -> customDebugKs
       }
+
+      storeFile = debugKeystore
+      storePassword = "android"
+      keyAlias = "androiddebugkey"
+      keyPassword = "android"
     }
   }
 

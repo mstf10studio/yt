@@ -35,6 +35,22 @@ jobs:
         run: |
           echo "sdk.dir=$ANDROID_HOME" > local.properties
 
+      - name: Generate debug keystore for Android build
+        run: |
+          mkdir -p "$HOME/.android"
+          if [ ! -f "$HOME/.android/debug.keystore" ] && [ ! -f "$GITHUB_WORKSPACE/debug.keystore" ]; then
+            keytool -genkeypair \
+              -v \
+              -keystore "$GITHUB_WORKSPACE/debug.keystore" \
+              -storepass android \
+              -alias androiddebugkey \
+              -keypass android \
+              -keyalg RSA \
+              -keysize 2048 \
+              -validity 10000 \
+              -dname "CN=Android Debug,O=Android,C=US"
+          fi
+
       - name: Grant Execute Permission for Gradle
         run: chmod +x gradlew
 
