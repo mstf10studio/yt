@@ -1,0 +1,6 @@
+{
+  "name": "Shorts AI",
+  "description": "YouTube Shorts video oluşturucu - Gemini AI, Pexels stok videolar, Türkçe seslendirme, altyazılar, Python/Colab betiği ve GitHub Actions CI/CD desteği",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
