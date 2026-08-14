@@ -125,58 +125,6 @@ fun PythonColabScreen(
             border = androidx.compose.foundation.BorderStroke(2.dp, StatusGreen)
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Box(
-                            modifier = Modifier
-                                .background(StatusGreen.copy(alpha = 0.2f), RoundedCornerShape(12.dp))
-                                .padding(8.dp)
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Terminal,
-                                contentDescription = null,
-                                tint = StatusGreen
-                            )
-                        }
-                        Spacer(modifier = Modifier.width(10.dp))
-                        Column {
-                            Text(
-                                text = "Python 3.14.0 Runtime",
-                                fontSize = 17.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = Color.White
-                            )
-                            Text(
-                                text = "Android Embeddable (aarch64)",
-                                fontSize = 11.sp,
-                                color = StatusGreen
-                            )
-                        }
-                    }
-
-                    // Open Colab Web Intent
-                    OutlinedButton(
-                        onClick = {
-                            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://colab.research.google.com/"))
-                            context.startActivity(intent)
-                        },
-                        shape = RoundedCornerShape(12.dp),
-                        modifier = Modifier.testTag("btn_open_colab_browser")
-                    ) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Icon(Icons.Default.OpenInNew, contentDescription = null, tint = PurpleAccent, modifier = Modifier.height(16.dp).width(16.dp))
-                            Spacer(modifier = Modifier.width(4.dp))
-                            Text("Colab", fontSize = 12.sp, color = PurpleAccent)
-                        }
-                    }
-                }
-
-                Spacer(modifier = Modifier.height(12.dp))
-
                 // MAIN PROMINENT GREEN RUN BUTTON
                 Button(
                     onClick = { triggerExecution() },
