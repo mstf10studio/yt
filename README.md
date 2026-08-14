@@ -2,21 +2,21 @@
 <img width="1200" height="475" alt="GHBanner" src="https://ai.google.dev/static/site-assets/images/share-ais-513315318.png" />
 </div>
 
-# Run and deploy your AI Studio app
+# AI Studio Uygulamanızı Çalıştırın ve Yayınlayın
 
-This contains everything you need to run your app locally.
+Uygulamanızı yerel olarak çalıştırmak için ihtiyacınız olan her şey burada bulunmaktadır.
 
-View your app in AI Studio: https://ai.studio/apps/318ba97b-7ca6-4fa6-a387-317bfd2f918e
+Uygulamanızı AI Studio'da görüntüleyin: https://ai.studio/apps/318ba97b-7ca6-4fa6-a387-317bfd2f918e
 
-## Run Locally
+## Yerel Olarak Çalıştırma
 
-**Prerequisites:**  [Android Studio](https://developer.android.com/studio)
+**Ön Koşullar:**  [Android Studio](https://developer.android.com/studio)
 
 
-1. Open Android Studio
-2. Select **Open** and choose the directory containing this project
-3. Allow Android Studio to fix any incompatibilities as it imports the project.
-4. Create a file named `.env` in the project directory and set `GEMINI_API_KEY` in that file to your Gemini API key (see `.env.example` for an example)
-5. Remove this line from the app's `build.gradle.kts` file: `signingConfig = signingConfigs.getByName("debugConfig")`
-6. Run the app on an emulator or physical device
-7. If you have already published your app in AI Studio, please [request upload key reset](https://support.google.com/googleplay/android-developer/answer/9842756#zippy=%2Crequest-an-upload-key-reset) in Google Play Console.
+1. Android Studio'yu açın
+2. **Aç** seçeneğini seçin ve bu projeyi içeren dizini seçin
+3. Android Studio'nun projeyi içe aktarırken uyumsuzlukları düzeltmesine izin verin
+4. Proje dizininde `.env` adlı bir dosya oluşturun ve Gemini API anahtarınızı bu dosyada `GEMINI_API_KEY` olarak ayarlayın (örnek için `.env.example` dosyasına bakın)
+5. Uygulamanın `build.gradle.kts` dosyasından bu satırı kaldırın: `signingConfig = signingConfigs.getByName("debugConfig")`
+6. Uygulamayı bir emülatör veya fiziksel cihazda çalıştırın
+7. Uygulamanızı zaten AI Studio'da yayınladıysanız, lütfen Google Play Console'da [yükleme anahtarını sıfırlamayı talep edin](https://support.google.com/googleplay/android-developer/answer/9842756#zippy=%2Crequest-an-upload-key-reset)
