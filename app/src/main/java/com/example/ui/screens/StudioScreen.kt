@@ -25,7 +25,6 @@ import androidx.compose.material.icons.filled.BugReport
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Key
 import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material.icons.filled.Terminal
 import androidx.compose.material.icons.filled.RecordVoiceOver
 import androidx.compose.material.icons.filled.Subtitles
 import androidx.compose.material.icons.filled.Timer
@@ -80,8 +79,7 @@ fun StudioScreen(
     progressPercent: Int,
     onOpenApiKeys: () -> Unit,
     onOpenDiagnostics: () -> Unit,
-    onGenerateClick: () -> Unit,
-    onRunPythonClick: () -> Unit = {}
+    onGenerateClick: () -> Unit
 ) {
     val scrollState = rememberScrollState()
 
@@ -396,34 +394,6 @@ fun StudioScreen(
                     fontSize = 15.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.White
-                )
-            }
-        }
-
-        Spacer(modifier = Modifier.height(10.dp))
-
-        // Secondary Action Button: Python 3.14.0 Live Engine Run
-        Button(
-            onClick = onRunPythonClick,
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(52.dp)
-                .testTag("btn_studio_run_python_live"),
-            colors = ButtonDefaults.buttonColors(containerColor = StatusGreen),
-            shape = RoundedCornerShape(16.dp)
-        ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(
-                    imageVector = Icons.Default.Terminal,
-                    contentDescription = null,
-                    tint = Color.Black
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(
-                    text = "🐍 Python 3.14.0 ile Canlı Çalıştır",
-                    fontSize = 15.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.Black
                 )
             }
         }

@@ -1,7 +1,6 @@
 package com.example.ui.components
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Code
 import androidx.compose.material.icons.filled.FolderSpecial
 import androidx.compose.material.icons.filled.PlayCircle
 import androidx.compose.material.icons.filled.VideoLibrary
@@ -54,18 +53,9 @@ fun ShortsNavbar(
         )
 
         NavigationBarItem(
-            modifier = Modifier.testTag("nav_tab_python"),
+            modifier = Modifier.testTag("nav_tab_gallery"),
             selected = selectedTab == 2,
             onClick = { onTabSelected(2) },
-            icon = { Icon(Icons.Default.Code, contentDescription = "Python/Colab") },
-            label = { Text("Python") },
-            colors = itemColors
-        )
-
-        NavigationBarItem(
-            modifier = Modifier.testTag("nav_tab_gallery"),
-            selected = selectedTab == 3,
-            onClick = { onTabSelected(3) },
             icon = { Icon(Icons.Default.FolderSpecial, contentDescription = "Galeri") },
             label = { Text("Galeri") },
             colors = itemColors

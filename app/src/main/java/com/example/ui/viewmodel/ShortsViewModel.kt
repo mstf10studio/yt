@@ -7,7 +7,6 @@ import com.example.data.engine.ShortsEngine
 import com.example.data.engine.TextToSpeechEngine
 import com.example.data.local.AppDatabase
 import com.example.data.local.ShortsProjectEntity
-import com.example.data.python.InAppPythonExecutor
 import com.example.data.remote.GeminiScriptEngine
 import com.example.data.remote.PexelsApiService
 import com.example.data.repository.ShortsRepository
@@ -122,23 +121,6 @@ class ShortsViewModel(application: Application) : AndroidViewModel(application) 
             } else {
                 _uiState.value = _uiState.value.copy(isErrorDialogOpen = true)
             }
-        }
-    }
-
-    fun runInAppPythonScript(
-        pythonCode: String,
-        onLog: (String) -> Unit,
-        onProgress: (Float) -> Unit,
-        onComplete: () -> Unit
-    ) {
-        viewModelScope.launch {
-            InAppPythonExecutor.executePythonScript(
-                context = getApplication(),
-                scriptCode = pythonCode,
-                onLog = onLog,
-                onProgress = onProgress
-            )
-            onComplete()
         }
     }
 

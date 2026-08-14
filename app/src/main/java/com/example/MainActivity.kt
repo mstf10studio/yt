@@ -19,7 +19,6 @@ import com.example.ui.components.ErrorDiagnosticDialog
 import com.example.ui.components.ShortsNavbar
 import com.example.ui.screens.GalleryScreen
 import com.example.ui.screens.PreviewScreen
-import com.example.ui.screens.PythonColabScreen
 import com.example.ui.screens.StudioScreen
 import com.example.ui.theme.ShortsAITheme
 import com.example.ui.viewmodel.ShortsViewModel
@@ -73,8 +72,7 @@ class MainActivity : ComponentActivity() {
                                 progressPercent = progressPercent,
                                 onOpenApiKeys = { viewModel.toggleApiKeyDialog(true) },
                                 onOpenDiagnostics = { viewModel.toggleErrorDialog(true) },
-                                onGenerateClick = { viewModel.startGeneration() },
-                                onRunPythonClick = { viewModel.selectTab(2) }
+                                onGenerateClick = { viewModel.startGeneration() }
                             )
 
                             1 -> PreviewScreen(
@@ -85,15 +83,7 @@ class MainActivity : ComponentActivity() {
                                 onNavigateToStudio = { viewModel.selectTab(0) }
                             )
 
-                            2 -> PythonColabScreen(
-                                currentTopic = uiState.topic,
-                                settings = settingsState,
-                                onRunPythonScript = { code, onLog, onProgress, onComplete ->
-                                    viewModel.runInAppPythonScript(code, onLog, onProgress, onComplete)
-                                }
-                            )
-
-                            3 -> GalleryScreen(
+                            2 -> GalleryScreen(
                                 projects = allProjects,
                                 onDeleteProject = { viewModel.deleteProject(it) },
                                 onNavigateToStudio = { viewModel.selectTab(0) }
