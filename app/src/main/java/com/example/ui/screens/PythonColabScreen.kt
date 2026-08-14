@@ -115,70 +115,7 @@ fun PythonColabScreen(
             .background(DarkBackground)
             .padding(16.dp)
     ) {
-        // 1. FIXED TOP HERO RUN CARD - ALWAYS VISIBLE AT TOP OF SCREEN
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 12.dp),
-            shape = RoundedCornerShape(24.dp),
-            colors = CardDefaults.cardColors(containerColor = DarkSurface),
-            border = androidx.compose.foundation.BorderStroke(2.dp, StatusGreen)
-        ) {
-            Column(modifier = Modifier.padding(16.dp)) {
-                // MAIN PROMINENT GREEN RUN BUTTON
-                Button(
-                    onClick = { triggerExecution() },
-                    enabled = !isExecuting,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(54.dp)
-                        .testTag("btn_run_python_engine"),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = StatusGreen,
-                        disabledContainerColor = DarkSurfaceVariant
-                    ),
-                    shape = RoundedCornerShape(16.dp)
-                ) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(
-                            imageVector = if (isExecuting) Icons.Default.Stop else Icons.Default.PlayArrow,
-                            contentDescription = null,
-                            tint = Color.Black,
-                            modifier = Modifier.height(26.dp).width(26.dp)
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text(
-                            text = if (isExecuting) "PYTHON 3.14.0 ÇALIŞIYOR..." else "▶ PYTHON KODUNU ÇALIŞTIR",
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = Color.Black
-                        )
-                    }
-                }
-
-                // Progress Indicator
-                AnimatedVisibility(visible = isExecuting || executionProgress > 0f) {
-                    Column(modifier = Modifier.padding(top = 10.dp)) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Text("Çalıştırma İlerlemesi", fontSize = 11.sp, color = TextSecondary)
-                            Text("%${(executionProgress * 100).toInt()}", fontSize = 11.sp, color = StatusGreen, fontWeight = FontWeight.Bold)
-                        }
-                        Spacer(modifier = Modifier.height(4.dp))
-                        LinearProgressIndicator(
-                            progress = { executionProgress },
-                            modifier = Modifier.fillMaxWidth(),
-                            color = StatusGreen,
-                            trackColor = DarkSurfaceVariant
-                        )
-                    }
-                }
-            }
-        }
-
-        // 2. SCROLLABLE LOWER CONTENT
+        // SCROLLABLE LOWER CONTENT
         Column(
             modifier = Modifier
                 .fillMaxWidth()
