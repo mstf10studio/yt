@@ -51,6 +51,25 @@ jobs:
               -dname "CN=Android Debug,O=Android,C=US"
           fi
 
+      - name: Prepare release signing key
+        run: |
+          if [ ! -f "$GITHUB_WORKSPACE/my-upload-key.jks" ]; then
+            keytool -genkeypair \
+              -v \
+              -keystore "$GITHUB_WORKSPACE/my-upload-key.jks" \
+              -storepass android \
+              -alias upload \
+              -keypass android \
+              -keyalg RSA \
+              -keysize 2048 \
+              -validity 10000 \
+              -dname "CN=Upload,O=ShortsAI,C=US"
+          fi
+          echo "KEYSTORE_PATH=$GITHUB_WORKSPACE/my-upload-key.jks" >> "$GITHUB_ENV"
+          echo "STORE_PASSWORD=android" >> "$GITHUB_ENV"
+          echo "KEY_PASSWORD=android" >> "$GITHUB_ENV"
+          echo "KEY_ALIAS=upload" >> "$GITHUB_ENV"
+
       - name: Grant Execute Permission for Gradle
         run: chmod +x gradlew
 
