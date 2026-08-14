@@ -132,16 +132,48 @@ fun PreviewScreen(
         if (isPlaying) {
             onSpeakNarration(currentScene.narrationText)
             val subtitles = currentScene.timedSubtitles
+            
             if (subtitles.isNotEmpty()) {
-                val delayPerWordMs = (currentScene.durationSeconds * 1000L) / subtitles.size
+                // Gerçek ses kaydından alınan kelime zamanlarını kullan
+                val sceneStartTimeMs = System.currentTimeMillis()
+                
                 for (wIdx in subtitles.indices) {
+                    val subtitle = subtitles[wIdx]
+                    val nextSubtitle = if (wIdx < subtitles.size - 1) subtitles[wIdx + 1] else null
+                    
+                    // Gerçek kelime süresi
+                    val wordDurationMs = if (nextSubtitle != null) {
+                        nextSubtitle.startMs - subtitle.startMs
+                    } else {
+                        subtitle.endMs - subtitle.startMs
+                    }
+                    
                     activeWordIndex = wIdx
-                    delay(delayPerWordMs)
+                    
+                    // Ses kaydının gerçek zamanlanmasını takip et
+                    val targetDelayMs = subtitle.startMs
+                    val elapsedMs = System.currentTimeMillis() - sceneStartTimeMs
+                    val remainingDelayMs = targetDelayMs - elapsedMs
+                    
+                    if (remainingDelayMs > 0) {
+                        delay(remainingDelayMs)
+                    }
+                }
+                
+                // Sahne bitişine kadar bekle
+                val totalSceneMs = currentScene.durationSeconds * 1000L
+                val sceneElapsedMs = System.currentTimeMillis() - sceneStartTimeMs
+                val remainingSceneMs = totalSceneMs - sceneElapsedMs
+                
+                if (remainingSceneMs > 0) {
+                    delay(remainingSceneMs)
                 }
             } else {
+                // Altyazı yoksa sadece sahne süresi kadar bekle
                 delay(currentScene.durationSeconds * 1000L)
             }
-            // Advance to next scene
+            
+            // Sonraki sahneye geç
             if (activeSceneIndex < script.scenes.size - 1) {
                 activeSceneIndex++
             } else {

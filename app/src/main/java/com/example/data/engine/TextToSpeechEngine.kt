@@ -19,6 +19,9 @@ class TextToSpeechEngine(private val context: Context) {
 
     private val _currentUtteranceId = MutableStateFlow<String?>(null)
     val currentUtteranceId: StateFlow<String?> = _currentUtteranceId
+    
+    private val _speakStartTimeMs = MutableStateFlow<Long>(0L)
+    val speakStartTimeMs: StateFlow<Long> = _speakStartTimeMs
 
     init {
         tts = TextToSpeech(context.applicationContext) { status ->
@@ -32,17 +35,20 @@ class TextToSpeechEngine(private val context: Context) {
                     override fun onStart(utteranceId: String?) {
                         _isSpeaking.value = true
                         _currentUtteranceId.value = utteranceId
+                        _speakStartTimeMs.value = System.currentTimeMillis()
                     }
 
                     override fun onDone(utteranceId: String?) {
                         _isSpeaking.value = false
                         _currentUtteranceId.value = null
+                        _speakStartTimeMs.value = 0L
                     }
 
                     @Deprecated("Deprecated in Java")
                     override fun onError(utteranceId: String?) {
                         _isSpeaking.value = false
                         _currentUtteranceId.value = null
+                        _speakStartTimeMs.value = 0L
                     }
                 })
 
