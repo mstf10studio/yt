@@ -37,8 +37,10 @@ class GeminiScriptEngine {
         }
 
         if (apiKey.isNullOrEmpty()) {
-            // Return fallback offline/demo script with detailed warning log
-            return@withContext Result.success(generateFallbackScript(topic, targetDurationSeconds, language))
+            // HATA: API anahtarı olmadan işlem yapılamaz
+            return@withContext Result.failure(
+                Exception("❌ Gemini API anahtarı gereklidir. Ayarlar panelinden API anahtarınızı girin.")
+            )
         }
 
         try {
@@ -99,7 +101,9 @@ class GeminiScriptEngine {
             val responseBody = response.body?.string()
 
             if (!response.isSuccessful || responseBody.isNullOrEmpty()) {
-                return@withContext Result.success(generateFallbackScript(topic, targetDurationSeconds, language))
+                return@withContext Result.failure(
+                    Exception("❌ Gemini API isteği başarısız. Durum: ${response.code}. Lütfen API anahtarınızı ve internet bağlantısını kontrol edin.")
+                )
             }
 
             val responseJson = JSONObject(responseBody)
@@ -112,7 +116,9 @@ class GeminiScriptEngine {
                 ?.optString("text")
 
             if (textContent.isNullOrEmpty()) {
-                return@withContext Result.success(generateFallbackScript(topic, targetDurationSeconds, language))
+                return@withContext Result.failure(
+                    Exception("❌ Gemini API yanıtı boş veya geçersiz. Lütfen tekrar deneyin.")
+                )
             }
 
             // Parse clean JSON text
@@ -121,8 +127,8 @@ class GeminiScriptEngine {
             Result.success(parsedScript)
 
         } catch (e: Exception) {
-            // Fallback script on exception
-            Result.success(generateFallbackScript(topic, targetDurationSeconds, language))
+            // API hatası - fallback YOK
+            Result.failure(Exception("❌ Senaryo oluşturma hatası: ${e.message}"))
         }
     }
 

@@ -62,29 +62,35 @@ class ShortsEngine(
             _currentStep.value = GenerationStep.VALIDATING_KEYS
             addLog("BAŞLANGIÇ", "'$topic' konusu için 9:16 YouTube Shorts video üretim süreci başlatıldı.")
 
-            // Step 1: Key & API Validation
+            // Step 1: Key & API Validation (MANDATORY)
             val pexelsKey = settings.pexelsApiKey.trim()
             val geminiKey = settings.geminiApiKey.trim()
 
+            // HATA: Her iki API anahtarı da zorunlu
             if (pexelsKey.isEmpty()) {
                 addLog(
-                    "PEXELS_UYARI",
-                    "Pexels API anahtarı tanımlanmamış. Varsayılan dikey görsel efekt videoları kullanılacak.",
-                    isError = false,
-                    suggestion = "Ücretsiz Pexels API anahtarınızı Ayarlar panelinden ekleyebilirsiniz."
+                    "PEXELS_HATA",
+                    "❌ Pexels API anahtarı tanımlanmamış! Video üretim yapılamaz.",
+                    isError = true,
+                    suggestion = "Lütfen Ayarlar panelinden Pexels API anahtarınızı girin. https://www.pexels.com/api/"
                 )
-            } else {
-                addLog("PEXELS_BİLGİ", "Pexels API anahtarı mevcut, dikey stok video araması etkin.")
+                _currentStep.value = GenerationStep.FAILED
+                return@withContext Result.failure(Exception("Pexels API anahtarı gereklidir"))
             }
 
             if (geminiKey.isEmpty()) {
                 addLog(
-                    "GEMINI_UYARI",
-                    "Gemini API anahtarı girilmedi. Akıllı çevrimdışı şablon motoru devreye girdi.",
-                    isError = false,
-                    suggestion = "Ücretsiz Gemini API anahtarınızı Ayarlar panelinden veya .env dosyasından tanımlayın."
+                    "GEMINI_HATA",
+                    "❌ Gemini API anahtarı tanımlanmamış! Senaryo oluşturulamaz.",
+                    isError = true,
+                    suggestion = "Lütfen Ayarlar panelinden Gemini API anahtarınızı girin. https://aistudio.google.com/app/apikey"
                 )
+                _currentStep.value = GenerationStep.FAILED
+                return@withContext Result.failure(Exception("Gemini API anahtarı gereklidir"))
             }
+
+            addLog("PEXELS_BİLGİ", "✅ Pexels API anahtarı doğrulandı")
+            addLog("GEMINI_BİLGİ", "✅ Gemini API anahtarı doğrulandı")
 
             _progressPercent.value = 20
             _currentStep.value = GenerationStep.GENERATING_SCRIPT
@@ -116,32 +122,33 @@ class ShortsEngine(
                 var foundVideoUrl: String? = null
                 var foundPreviewUrl: String? = null
 
-                if (pexelsKey.isNotEmpty()) {
-                    try {
-                        addLog("PEXELS_ARAMA", "Sahne ${index + 1}: '${scene.pexelsSearchQuery}' araması yapılıyor...")
-                        val searchResponse = pexelsApiService.searchVideos(
-                            apiKey = pexelsKey,
-                            query = scene.pexelsSearchQuery,
-                            orientation = "portrait",
-                            perPage = 5
-                        )
+                try {
+                    addLog("PEXELS_ARAMA", "Sahne ${index + 1}: '${scene.pexelsSearchQuery}' araması yapılıyor...")
+                    val searchResponse = pexelsApiService.searchVideos(
+                        apiKey = pexelsKey,
+                        query = scene.pexelsSearchQuery,
+                        orientation = "portrait",
+                        perPage = 5
+                    )
 
-                        if (searchResponse.videos.isNotEmpty()) {
-                            val video = searchResponse.videos.first()
-                            foundPreviewUrl = video.image
-                            // Select HD portrait video file link
-                            val portraitFile = video.video_files.firstOrNull {
-                                (it.width ?: 0) <= (it.height ?: 0) && !it.link.contains("m3u8")
-                            } ?: video.video_files.firstOrNull()
+                    if (searchResponse.videos.isNotEmpty()) {
+                        val video = searchResponse.videos.first()
+                        foundPreviewUrl = video.image
+                        // Select HD portrait video file link
+                        val portraitFile = video.video_files.firstOrNull {
+                            (it.width ?: 0) <= (it.height ?: 0) && !it.link.contains("m3u8")
+                        } ?: video.video_files.firstOrNull()
 
-                            foundVideoUrl = portraitFile?.link
-                            addLog("PEXELS_BULUNDU", "Sahne ${index + 1} için HD stok video bağlandı.")
-                        } else {
-                            addLog("PEXELS_BOŞ", "Sahne ${index + 1} için dikey video bulunamadı, varsayılan arka plan kullanılacak.")
-                        }
-                    } catch (e: Exception) {
-                        addLog("PEXELS_HATA", "Sahne ${index + 1} video araması başarısız: ${e.message}", isError = false)
+                        foundVideoUrl = portraitFile?.link
+                        addLog("PEXELS_BULUNDU", "Sahne ${index + 1} için HD stok video bağlandı.")
+                    } else {
+                        // HATA: Video bulunamadı - işlem yapılamaz
+                        addLog("PEXELS_HATA", "❌ Sahne ${index + 1} için dikey video bulunamadı!", isError = true)
+                        throw Exception("Sahne ${index + 1} için Pexels'de uygun video bulunamadı")
                     }
+                } catch (e: Exception) {
+                    addLog("PEXELS_HATA", "❌ Sahne ${index + 1} video araması başarısız: ${e.message}", isError = true)
+                    throw e
                 }
 
                 updatedScenes.add(
