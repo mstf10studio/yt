@@ -255,7 +255,7 @@ fun PreviewScreen(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .padding(16.dp)
-                    .fillMaxWidth(0.9f),
+                    .fillMaxWidth(0.95f),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 val words = currentScene.timedSubtitles
@@ -263,34 +263,27 @@ fun PreviewScreen(
                     Box(
                         modifier = Modifier
                             .background(captionStyle.bgColor, RoundedCornerShape(12.dp))
-                            .padding(horizontal = 12.dp, vertical = 8.dp)
+                            .padding(horizontal = 14.dp, vertical = 10.dp)
+                            .fillMaxWidth()
                     ) {
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            // Show only 5 words max (active word + 2 before + 2 after)
-                            val startIdx = maxOf(0, activeWordIndex - 2)
-                            val endIdx = minOf(words.size - 1, activeWordIndex + 2)
-
-                            Row(
-                                horizontalArrangement = Arrangement.Center,
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier.fillMaxWidth()
-                            ) {
-                                for (idx in startIdx..endIdx) {
-                                    val sub = words[idx]
-                                    val isWordHighlighted = idx == activeWordIndex
-                                    Text(
-                                        text = "${sub.text} ",
-                                        fontSize = if (isWordHighlighted) 18.sp else 15.sp,
-                                        fontWeight = if (isWordHighlighted) FontWeight.ExtraBold else FontWeight.Medium,
-                                        color = if (isWordHighlighted) captionStyle.textColor else Color.White.copy(alpha = 0.8f),
-                                        maxLines = 2,
-                                        overflow = TextOverflow.Ellipsis
-                                    )
-                                }
-                            }
+                        val startIdx = maxOf(0, activeWordIndex - 2)
+                        val endIdx = minOf(words.size - 1, activeWordIndex + 2)
+                        
+                        val displayText = StringBuilder()
+                        for (idx in startIdx..endIdx) {
+                            if (displayText.isNotEmpty()) displayText.append(" ")
+                            displayText.append(words[idx].text)
                         }
+                        
+                        Text(
+                            text = displayText.toString(),
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.ExtraBold,
+                            color = captionStyle.textColor,
+                            textAlign = TextAlign.Center,
+                            softWrap = true,
+                            modifier = Modifier.fillMaxWidth()
+                        )
                     }
                 } else {
                     Text(
@@ -299,8 +292,7 @@ fun PreviewScreen(
                         fontWeight = FontWeight.Bold,
                         color = captionStyle.textColor,
                         textAlign = TextAlign.Center,
-                        maxLines = 2,
-                        overflow = TextOverflow.Ellipsis,
+                        softWrap = true,
                         modifier = Modifier
                             .background(captionStyle.bgColor, RoundedCornerShape(12.dp))
                             .padding(10.dp)
